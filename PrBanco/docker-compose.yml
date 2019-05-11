@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  prbanco.api:
+    image: ${DOCKER_REGISTRY-}prbancoapi
+    build:
+      context: .
+      dockerfile: src/PrBanco.API/Dockerfile
+    links:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017

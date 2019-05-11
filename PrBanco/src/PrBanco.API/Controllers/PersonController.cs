@@ -3,6 +3,7 @@ using PrBanco.API.Services;
 using PrBanco.API.ViewModels;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PrBanco.API.Controllers
 {
@@ -17,16 +18,17 @@ namespace PrBanco.API.Controllers
 
         [HttpGet]
         [Route("person-management")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok(_personService.GetAll());
+            var result = await _personService.GetAll();
+            return Ok(result);
         }
 
         [HttpGet]
         [Route("person-management/{id:guid}")]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var personViewModel = _personService.GetById(id);
+            var personViewModel = await _personService.GetById(id);
 
             if (personViewModel == null)
                 return BadRequest(new
@@ -40,7 +42,7 @@ namespace PrBanco.API.Controllers
 
         [HttpPost]
         [Route("person-management")]
-        public IActionResult Post([FromBody]PersonViewModel personViewModel)
+        public async Task<IActionResult> Post([FromBody]PersonViewModel personViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -52,7 +54,7 @@ namespace PrBanco.API.Controllers
                 });
             }
 
-            var result = _personService.Register(personViewModel);
+            var result = await _personService.Register(personViewModel);
 
             return Response(result);
 
@@ -60,7 +62,7 @@ namespace PrBanco.API.Controllers
 
         [HttpPut]
         [Route("person-management")]
-        public IActionResult Put([FromBody]PersonViewModel personViewModel)
+        public async Task<IActionResult> Put([FromBody]PersonViewModel personViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -72,16 +74,16 @@ namespace PrBanco.API.Controllers
                 });
             }
 
-            var result = _personService.Update(personViewModel);
+            var result = await _personService.Update(personViewModel);
 
             return Response(result);
         }
-       
+
         [HttpDelete]
         [Route("person-management")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            _personService.Remove(id);
+            await _personService.Remove(id);
 
             return Ok();
         }

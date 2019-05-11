@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using PrBanco.API.ViewModels;
 using PrBanco.Domain.Entities;
@@ -19,39 +20,39 @@ namespace PrBanco.API.Services
             _personRepository = personRepository;
         }
 
-        public IEnumerable<PersonViewModel> GetAll()
+        public async Task<IEnumerable<PersonViewModel>> GetAll()
         {
-            return _mapper.Map<IEnumerable<PersonViewModel>>(_personRepository.Get().Result);
+            return _mapper.Map<IEnumerable<PersonViewModel>>(await _personRepository.Get());
         }
 
-        public PersonViewModel GetById(Guid id)
+        public async Task<PersonViewModel> GetById(Guid id)
         {
-            return _mapper.Map<PersonViewModel>(_personRepository.GetById(id));
+            return _mapper.Map<PersonViewModel>(await _personRepository.GetById(id));
         }
 
-        public ServiceResult Register(PersonViewModel personViewModel)
+        public async Task<ServiceResult> Register(PersonViewModel personViewModel)
         {
             var person = _mapper.Map<Person>(personViewModel);
 
             if (person.Invalid)
                 return new ServiceResult(false, person.Notifications.Select(n => n.Message).ToList());
 
-            _personRepository.Add(person);
+            await _personRepository.Add(person);
 
             return new ServiceResult() { Success = true };
         }
 
-        public void Remove(Guid id)
+        public async Task Remove(Guid id)
         {
-            _personRepository.Delete(id);
+            await _personRepository.Delete(id);
         }
 
-        public ServiceResult Update(PersonViewModel personViewModel)
+        public async Task<ServiceResult> Update(PersonViewModel personViewModel)
         {
             var person = _mapper.Map<Person>(personViewModel);
             var result = new ServiceResult() { Success = person.Valid };
 
-            Person existingPerson = _personRepository.GetByEmail(personViewModel.EmailAddress).Result;
+            Person existingPerson = await _personRepository.GetByEmail(personViewModel.EmailAddress);
 
             if (existingPerson != null && existingPerson.Id != personViewModel.Id)
             {
@@ -62,7 +63,7 @@ namespace PrBanco.API.Services
             result.Notifications.AddRange(person.Notifications.Select(n => n.Message).ToList());
 
             if (person.Valid && result.Success)
-                _personRepository.Update(person);
+                await _personRepository.Update(person);
 
             return result;
         }

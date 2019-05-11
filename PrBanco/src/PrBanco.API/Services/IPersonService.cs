@@ -1,20 +1,21 @@
 ﻿using PrBanco.API.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PrBanco.API.Services
 {
     public interface IPersonService
     {
-        IEnumerable<PersonViewModel> GetAll();
+        Task<IEnumerable<PersonViewModel>> GetAll();
 
-        PersonViewModel GetById(Guid id);
+        Task<PersonViewModel> GetById(Guid id);
 
-        ServiceResult Register(PersonViewModel person);
+        Task<ServiceResult> Register(PersonViewModel person);
 
-        ServiceResult Update(PersonViewModel person);
+        Task<ServiceResult> Update(PersonViewModel person);
 
-        void Remove(Guid id);
+        Task Remove(Guid id);
 
     }
 }

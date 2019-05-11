@@ -51,7 +51,7 @@ namespace PrBanco.API.Services
             var person = _mapper.Map<Person>(personViewModel);
             var result = new ServiceResult() { Success = person.Valid };
 
-            Person existingPerson = _personRepository.GetByEmail(personViewModel.Email).Result;
+            Person existingPerson = _personRepository.GetByEmail(personViewModel.EmailAddress).Result;
 
             if (existingPerson != null && existingPerson.Id != personViewModel.Id)
             {

@@ -20,10 +20,10 @@ namespace PrBanco.API.ViewModels
 
         [Required(ErrorMessage = "O E-mail é obrigatório")]
         [EmailAddress]
-        public string Email { get; set; }
+        public string EmailAddress { get; set; }
 
         [Phone(ErrorMessage = "Telefone Inválido")]
-        public string Phone { get; set; }
+        public string PhoneNumber { get; set; }
 
         public AddressViewModel Address { get; set; }
 

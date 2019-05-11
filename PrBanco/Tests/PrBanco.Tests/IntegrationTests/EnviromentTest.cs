@@ -8,7 +8,7 @@ using System.Net.Http;
 
 namespace PrBanco.Tests.IntegrationTests
 {
-    public class EnviromentTest
+    public static class EnvironmentTest
     {
         public static TestServer Server { get; set; }
         public static HttpClient Client { get; set; }
@@ -23,7 +23,7 @@ namespace PrBanco.Tests.IntegrationTests
                     .UseEnvironment("Development")
                     .UseContentRoot(Directory.GetCurrentDirectory())
                     .UseUrls("http://localhost:64303")
-                    .UseStartup<Startup>());
+                    .UseStartup<StartupTest>());
 
             Config = new ConfigurationBuilder()
                    .AddJsonFile("appsettings.Development.json")

@@ -13,9 +13,9 @@ namespace PrBanco.API.AutoMapper
                 .ConstructUsing(c => new Person(
                     c.Id,
                     new Name(c.FirstName, c.LastName),
-                    new Email(c.Email),
-                    new Phone(c.Phone),
-                    Mapper.Map<Address>(c.Address)));
+                    new Email(c.EmailAddress),
+                    new Phone(c.PhoneNumber),
+                    new Address(c.Address?.Street, c.Address?.Number, c.Address?.Neighborhood, c.Address?.City, c.Address?.State, c.Address?.Country, c.Address?.ZipCode)));
         }
     }
 }

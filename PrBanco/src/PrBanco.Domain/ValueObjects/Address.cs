@@ -20,6 +20,7 @@ namespace PrBanco.Domain.ValueObjects
             Country = country;
             ZipCode = zipCode;
 
+            if( !string.IsNullOrEmpty( ZipCode) || !string.IsNullOrEmpty(street) )
             AddNotifications(new Contract()
                 .Requires()
                 .HasMinLen(Street, 3, "Address.Street", "A rua deve conter pelo menos 3 caracteres")

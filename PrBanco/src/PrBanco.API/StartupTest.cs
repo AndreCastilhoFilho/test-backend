@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
 using Newtonsoft.Json;
 using PrBanco.API.AutoMapper;
 using PrBanco.API.Services;
@@ -12,18 +12,19 @@ using PrBanco.Data.MongoDataAccess;
 using PrBanco.Data.MongoDataAccess.Context;
 using PrBanco.Data.MongoDataAccess.Repositories;
 using PrBanco.Domain.Repositories;
+using System.Reflection;
 
 namespace PrBanco.API
 {
-    public class Startup
+    public class StartupTest
     {
 
-        public Startup(IHostingEnvironment env)
+        public StartupTest(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
             .SetBasePath(env.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddJsonFile($"appsettings.Development.json", optional: true)
             .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -46,7 +47,11 @@ namespace PrBanco.API
                  })
             ;
 
-            services.AddAutoMapperSetup();
+            //services.AddAutoMapperSetup();
+            var assembly = typeof(Program).GetTypeInfo().Assembly;
+            services.AddAutoMapper(assembly);
+            Mapper.Reset();
+            AutoMapperConfig.RegisterMappings();
             services.AddOptions();
 
             RegisterServices(services);
@@ -56,15 +61,9 @@ namespace PrBanco.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+
+            app.UseDeveloperExceptionPage();
+
             app.UseCors(c =>
           {
               c.AllowAnyHeader();
@@ -90,7 +89,7 @@ namespace PrBanco.API
 
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IPersonRepository, PersonRepository>();
-                        
+
             //Seed Database
             services.AddSingleton<PrBancoDbContext>();
             var provider = services.BuildServiceProvider();

@@ -24,6 +24,7 @@ namespace PrBanco.Data.MongoDataAccess.Context
 
         private void CreatePersonsTest()
         {
+
             if (!CollectionExistsAsync("Persons").Result )
             {
                 var name = new Name("André", "Castilho");
